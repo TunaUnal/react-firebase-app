@@ -1,9 +1,9 @@
 import React from 'react'
 
-export default function RegisterComponent({submitHandle}) {
+export default function RegisterComponent({ submitHandle }) {
     return (
         <>
-        <h2>Kayıt Ol formu</h2>
+            <h2>Kayıt Ol formu</h2>
             <form onSubmit={submitHandle} >
                 <div className="mb-3">
                     <label htmlFor="exampleInputEmail1" className="form-label">Email address</label>

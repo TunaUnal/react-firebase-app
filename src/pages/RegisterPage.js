@@ -1,12 +1,11 @@
 import React, { useState } from 'react'
-import RegisterComponent from '../components/RegisterComponent'
 import { createUser } from '../firebase'
 function RegisterPage() {
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
     const submitHandle = async (e) => {
         e.preventDefault()
-        const user = await createUser(username,password)
+        await createUser(username,password)
     }
     return (
         <>

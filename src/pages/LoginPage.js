@@ -1,22 +1,14 @@
 import React, { useState } from 'react'
 import { login } from '../firebase'
-import { useDispatch } from 'react-redux'
-import { login as storeLogin } from '../store/user'
 import { useNavigate } from 'react-router-dom'
 function RegisterPage() {
     const navigate = useNavigate()
-    const dispatch = useDispatch()
-    const [username, setUsername] = useState('')
-    const [password, setPassword] = useState('')
+    const [username, setUsername] = useState('ariftunaunal@gmail.com')
+    const [password, setPassword] = useState('123123')
     const submitHandle = async (e) => {
         e.preventDefault()
         const user = await login(username, password)
-        if (user) {
-            dispatch(storeLogin(user))
-            navigate("/", {
-                replace: true
-            })
-        }
+        if (user) { navigate("/", { replace: true }) }
     }
     return (
         <>
