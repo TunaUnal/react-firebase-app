@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { login } from '../firebase'
+import { login, GoogleLogin } from '../firebase'
 import { useNavigate } from 'react-router-dom'
 function RegisterPage() {
     const navigate = useNavigate()
@@ -26,6 +26,7 @@ function RegisterPage() {
                                 <input type="password" value={password} onChange={e => setPassword(e.target.value)} className="form-control" id="exampleInputPassword1" />
                             </div>
                             <button type="submit" className="btn btn-primary">Giriş Yap</button>
+                            <button type="button" onClick={GoogleLogin} className="btn btn-primary">Google Login</button>
                         </form>
 
                     </div>

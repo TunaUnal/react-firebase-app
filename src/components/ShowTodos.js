@@ -1,5 +1,6 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
+import TodoItem from './TodoItem'
 function ShowTodos() {
     const { todos } = useSelector(state => state.todos)
     return (
@@ -8,7 +9,7 @@ function ShowTodos() {
                 <div className="col-8">
                     <ul className="list-group">
                         {todos.map(todo => (
-                            <li className="list-group-item" key={todo.id}>{todo.todo}</li>
+                            <TodoItem key={todo.id} todo={todo}/>
                         ))}
                     </ul>
                 </div>

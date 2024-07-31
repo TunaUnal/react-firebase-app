@@ -1,16 +1,37 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 
-import {  getFirestore, collection, query, addDoc,  onSnapshot, serverTimestamp, orderBy, where } from "firebase/firestore";
-import { createUserWithEmailAndPassword, getAuth, signInWithEmailAndPassword, updateProfile, signOut, onAuthStateChanged } from "firebase/auth";
+import {
+    getFirestore,
+    collection,
+    query,
+    addDoc,
+    doc,
+    updateDoc,
+    onSnapshot,
+    deleteDoc,
+    serverTimestamp,
+    orderBy,
+    where
+} from "firebase/firestore";
+
+import {
+    createUserWithEmailAndPassword,
+    getAuth,
+    signInWithEmailAndPassword,
+    updateProfile,
+    signOut,
+    onAuthStateChanged,
+    signInWithPopup,
+    GoogleAuthProvider
+} from "firebase/auth";
+
+
 import { toast } from "react-hot-toast";
 import store from "../store"
 import { login as loginHandle, logout as logoutHandle } from "../store/user";
 import { setTodos } from "../store/todos";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
 
-// Your web app's Firebase configuration
 const firebaseConfig = {
     apiKey: process.env.REACT_APP_API_KEY,
     authDomain: process.env.REACT_APP_AUTH_DOMAIN,
@@ -20,10 +41,13 @@ const firebaseConfig = {
     appId: process.env.REACT_APP_ID
 };
 
-// Initialize Firebase
+
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
+const GoogleProvider = new GoogleAuthProvider();
+GoogleProvider.addScope('https://www.googleapis.com/auth/contacts.readonly');
+
 
 export const createUser = async (email, password) => {
 
@@ -88,7 +112,54 @@ export const addTodo = async data => {
 
 }
 
+export const deleteTodo = async id => {
+    try {
+        await deleteDoc(doc(db, "todos", id));
+        toast.success("Todo silindi")
+        return true
+    } catch (error) {
+        toast.error(error.message)
+    }
+}
 
+export const updateTodo = async (todo, id) => {
+    try {
+        const todoRef = doc(db, "todos", id)
+        await updateDoc(todoRef, {
+            todo
+        });
+        toast.success("Todo Güncellendi")
+    } catch (error) {
+        toast.success(error.message)
+
+    }
+}
+
+export const GoogleLogin = () => {
+
+    signInWithPopup(auth, GoogleProvider)
+        .then((result) => {
+            // This gives you a Google Access Token. You can use it to access the Google API.
+            const credential = GoogleAuthProvider.credentialFromResult(result);
+            const token = credential.accessToken;
+            console.log("token", token)
+            // The signed-in user info.
+            const user = result.user;
+            console.log("user", user)
+            // IdP data available using getAdditionalUserInfo(result)
+            // ...
+        }).catch((error) => {
+            // Handle Errors here.
+            const errorCode = error.code;
+            const errorMessage = error.message;
+            // The email of the user's account used.
+            const email = error.customData.email;
+            // The AuthCredential type that was used.
+            const credential = GoogleAuthProvider.credentialFromError(error);
+            toast.error(error.message)
+            // ...
+        });
+}
 onAuthStateChanged(auth, (user) => {
     if (user) {
         store.dispatch(loginHandle({
