@@ -1,18 +1,22 @@
 import React, { useState } from 'react'
-import { login, GoogleLogin } from '../firebase'
+import { login } from '../firebase'
 import { useNavigate } from 'react-router-dom'
+import { useSelector } from 'react-redux'
 function RegisterPage() {
     const navigate = useNavigate()
     const [username, setUsername] = useState('ariftunaunal@gmail.com')
-    const [password, setPassword] = useState('123123')
+    const [password, setPassword] = useState('123321')
+    const {user} = useSelector(state => state.user)
+    if (user) { navigate("/", { replace: true }) }
     const submitHandle = async (e) => {
         e.preventDefault()
-        const user = await login(username, password)
-        if (user) { navigate("/", { replace: true }) }
+        await login(username, password).then(()=>{
+            navigate("/", { replace: true })
+        })
     }
     return (
         <>
-            <div className="container">
+            <div className="container mt-5">
                 <div className="row justify-content-center">
                     <div className="col-6">
                         <h2>Giriş Yap</h2>
@@ -25,8 +29,10 @@ function RegisterPage() {
                                 <label htmlFor="exampleInputPassword1" className="form-label">Password</label>
                                 <input type="password" value={password} onChange={e => setPassword(e.target.value)} className="form-control" id="exampleInputPassword1" />
                             </div>
+                            <div className="mb-3">
+                                <p className="small">Hesabınız yok mu? <a href="/register">Hesap oluşturun</a></p>
+                            </div>
                             <button type="submit" className="btn btn-primary">Giriş Yap</button>
-                            <button type="button" onClick={GoogleLogin} className="btn btn-primary">Google Login</button>
                         </form>
 
                     </div>

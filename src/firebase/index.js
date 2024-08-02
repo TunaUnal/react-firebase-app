@@ -20,6 +20,7 @@ import {
 	getAuth,
 	signInWithEmailAndPassword,
 	updateProfile,
+	sendEmailVerification,
 	signOut,
 	onAuthStateChanged,
 	signInWithPopup,
@@ -30,7 +31,7 @@ import {
 import { toast } from "react-hot-toast";
 import store from "../store"
 import { login as loginHandle, logout as logoutHandle } from "../store/user";
-import { setTodos } from "../store/todos";
+import { setTodos, deleteTodos } from "../store/todos";
 
 const firebaseConfig = {
 	apiKey: process.env.REACT_APP_API_KEY,
@@ -45,8 +46,6 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
-const GoogleProvider = new GoogleAuthProvider();
-GoogleProvider.addScope('https://www.googleapis.com/auth/contacts.readonly');
 
 export const createUser = async (email, password) => {
 
@@ -78,6 +77,7 @@ export const login = async (email, password) => {
 export const logout = async () => {
 	try {
 		await signOut(auth)
+		store.dispatch(deleteTodos)
 		return true
 	} catch (error) {
 		toast.error(error.message)
@@ -102,7 +102,7 @@ export const addTodo = async data => {
 		data.createdAt = serverTimestamp()
 		const docRef = await addDoc(collection(db, "todos"), data);
 		console.log("Document written with ID: ", docRef.id);
-		toast.success("Todo added")
+		toast.success("Todo eklendi")
 		return docRef
 	} catch (e) {
 		console.error("Error adding document: ", e);
@@ -114,7 +114,7 @@ export const addTodo = async data => {
 export const deleteTodo = async id => {
 	try {
 		await deleteDoc(doc(db, "todos", id));
-		toast.success("Todo silindi")
+		toast.success("Todo silindi.")
 		return true
 	} catch (error) {
 		toast.error(error.message)
@@ -127,38 +127,22 @@ export const updateTodo = async (todo, id) => {
 		await updateDoc(todoRef, {
 			todo
 		});
-		toast.success("Todo Güncellendi")
+		toast.success("Todo güncellendi.")
 	} catch (error) {
 		toast.success(error.message)
 
 	}
 }
 
-export const GoogleLogin = () => {
-
-	signInWithPopup(auth, GoogleProvider)
-		.then((result) => {
-			// This gives you a Google Access Token. You can use it to access the Google API.
-			const credential = GoogleAuthProvider.credentialFromResult(result);
-			const token = credential.accessToken;
-			console.log("token", token)
-			// The signed-in user info.
-			const user = result.user;
-			console.log("user", user)
-			// IdP data available using getAdditionalUserInfo(result)
-			// ...
-		}).catch((error) => {
-			// Handle Errors here.
-			const errorCode = error.code;
-			const errorMessage = error.message;
-			// The email of the user's account used.
-			const email = error.customData.email;
-			// The AuthCredential type that was used.
-			const credential = GoogleAuthProvider.credentialFromError(error);
-			toast.error(error.message)
-			// ...
-		});
+export const EmailVerification = async () => {
+	try {
+		await sendEmailVerification(auth.currentUser)
+		toast.success(`Doğrulama maili ${auth.currentUser.email} adresine gönderildi.`)
+	} catch (error) {
+		toast.error(error.message)
+	}
 }
+
 onAuthStateChanged(auth, (user) => {
 	if (user) {
 		store.dispatch(loginHandle({
@@ -166,6 +150,7 @@ onAuthStateChanged(auth, (user) => {
 			email: user.email,
 			displayName: user.displayName,
 			photoURL: user.photoURL,
+			emailVerified: user.emailVerified
 		}))
 
 		onSnapshot(query(collection(db, 'todos'), orderBy('createdAt', "desc"), where("uid", "==", user.uid)), (doc) => {
@@ -178,5 +163,6 @@ onAuthStateChanged(auth, (user) => {
 
 	} else {
 		store.dispatch(logoutHandle())
+		store.dispatch(deleteTodos)
 	}
 });
