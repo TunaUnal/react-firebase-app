@@ -26,7 +26,7 @@ export default function Dashboard() {
                     <div className="col-6">
                         <div className="alert alert-warning d-flex justify-content-between">
                             <span>E-Posta adresinizi doğrulamanız gerekmektedir.</span>
-                            <p className='text-warning mb-0' onClick={EmailVerification}>Doğrulama maili gönder.</p>
+                            <p className='text-warning mb-0 text-decoration-underline' style={{cursor:"pointer"}} onClick={EmailVerification}>Doğrulama maili gönder.</p>
                         </div>
                     </div>
                 </div>

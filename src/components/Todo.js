@@ -9,11 +9,10 @@ export default function Todo() {
         addTodo({
             todo: todo,
             uid: user.uid,
-        }).then(data => {
-            if (data) {
-                setTodo('')
-            }
         })
+
+                setTodo('')
+        
     }
     return (
         <>

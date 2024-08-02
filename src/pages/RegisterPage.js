@@ -10,8 +10,8 @@ function RegisterPage() {
         
         await createUser(username,password).then(()=>{
             setTimeout(() => {
-                navigate('/login',{replace:true})
-            }, 1500);
+                navigate('/',{replace:true})
+            }, 500);
         })
     }
     return (
