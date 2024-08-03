@@ -5,19 +5,21 @@ import { deleteTodo, updateTodo } from '../firebase'
 function TodoItem({ todo }) {
     const [editMode, setEditMode] = useState(false)
     const [newTodo, setNewTodo] = useState(todo.todo)
-    const submitHandle = async () => {
-        await updateTodo(newTodo, todo.id).then(()=>{
+    const submitHandle = async (e) => {
+        e.preventDefault()
+        await updateTodo(newTodo, todo.id).then(() => {
             setEditMode(false)
         })
     }
     if (editMode) {
         return (
-            <li className="list-group-item d-flex justify-content-between" style={{ background: "rgba(0,0,0,0.1)" }} >
-                <div className="input-group">
+            <li className="list-group-item" style={{ background: "rgba(0,0,0,0.1)" }} >
+
+                <form onSubmit={submitHandle}  className='input-group w-100' >
                     <input type="text" className="form-control" value={newTodo} onChange={e => setNewTodo(e.target.value)} />
-                    <button className="btn btn-primary" type="button" onClick={submitHandle}>Güncelle</button>
-                    <button className="btn btn-danger" type="submit" onClick={() => setEditMode(false)} >İptal Et</button>
-                </div>
+                    <button className="btn btn-primary" type="submit">Güncelle</button>
+                    <button className="btn btn-danger" type="button" onClick={() => setEditMode(false)} >İptal Et</button>
+                </form>
 
             </li>
         )

@@ -53,7 +53,7 @@ export const createUser = async (email, password) => {
 		.then((userCredential) => {
 			const user = userCredential.user;
 			console.log(user)
-			toast.success("user register successful")
+			toast.success("Kayıt oluşturuldu. Yönlendiriliyorsunuz...")
 			return user
 		})
 		.catch((error) => {
@@ -67,7 +67,7 @@ export const createUser = async (email, password) => {
 export const login = async (email, password) => {
 	try {
 		const { user } = await signInWithEmailAndPassword(auth, email, password)
-		toast.success("user login successful")
+		toast.success("Giriş Başarılı")
 		return user
 	} catch (error) {
 		toast.error(error.message)
@@ -87,8 +87,14 @@ export const logout = async () => {
 export const update = async (data) => {
 	try {
 		await updateProfile(auth.currentUser, data)
-		console.log("profil gunvcellendi")
-		toast.success("Update successfully")
+		toast.success("Profil güncellendi")
+		store.dispatch(loginHandle({
+			uid: auth.currentUser.uid,
+			email: auth.currentUser.email,
+			displayName: auth.currentUser.displayName,
+			photoURL: auth.currentUser.photoURL,
+			emailVerified: auth.currentUser.emailVerified
+		}))
 		return true
 	} catch (error) {
 		toast.error(error.message)
@@ -101,7 +107,6 @@ export const addTodo = async data => {
 	try {
 		data.createdAt = serverTimestamp()
 		const docRef = await addDoc(collection(db, "todos"), data);
-		console.log("Document written with ID: ", docRef.id);
 		toast.success("Todo eklendi")
 		return docRef
 	} catch (e) {
