@@ -34,12 +34,12 @@ import { login as loginHandle, logout as logoutHandle } from "../store/user";
 import { setTodos, deleteTodos } from "../store/todos";
 
 const firebaseConfig = {
-	apiKey: "AIzaSyDZz3dnRbhPR4n99Fubxz_ieZgaDr6LrGE",
-	authDomain: "react-case-c0209.firebaseapp.com",
-	projectId: "react-case-c0209",
-	storageBucket: "react-case-c0209.appspot.com",
-	messagingSenderId: "582913624455",
-	appId: "1:582913624455:web:0205ee08db45a975136b22"
+	apiKey: process.env.REACT_APP_API_KEY,
+	authDomain: process.env.REACT_APP_AUTH_DOMAIN,
+	projectId: process.env.REACT_APP_PROJECT_ID,
+	storageBucket: process.env.REACT_APP_STORAGE_BUCKET,
+	messagingSenderId: process.env.REACT_APP_MESSAGING_SENDER_ID,
+	appId: process.env.REACT_APP_ID
 };
 
 
