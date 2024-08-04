@@ -8,11 +8,11 @@ export default function Todo() {
         e.preventDefault();
         addTodo({
             todo: todo,
+            done:false,
             uid: user.uid,
         })
+        setTodo('')
 
-                setTodo('')
-        
     }
     return (
         <>

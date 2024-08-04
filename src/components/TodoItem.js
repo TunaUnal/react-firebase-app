@@ -7,9 +7,12 @@ function TodoItem({ todo }) {
     const [newTodo, setNewTodo] = useState(todo.todo)
     const submitHandle = async (e) => {
         e.preventDefault()
-        await updateTodo(newTodo, todo.id).then(() => {
+        await updateTodo({todo : newTodo}, todo.id).then(() => {
             setEditMode(false)
         })
+    }
+    const doneTodo = async () => {
+        await updateTodo({done : !todo.done}, todo.id)
     }
     if (editMode) {
         return (
@@ -26,9 +29,10 @@ function TodoItem({ todo }) {
     }
     return (
 
-        <li className="list-group-item d-flex justify-content-between" >
+        <li className="list-group-item d-flex justify-content-between"  >
             {todo.todo}
             <span>
+                <i onClick={doneTodo} className={todo.done ? "px-1 bi bi-check-square" : "px-1 bi bi-square"}></i>
                 <i onClick={() => setEditMode(true)} className="bi bi-pen px-1"></i>
                 <i onClick={() => deleteTodo(todo.id)} className="bi bi-trash3-fill px-1"></i>
             </span>

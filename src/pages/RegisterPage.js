@@ -8,11 +8,12 @@ function RegisterPage() {
     const submitHandle = async (e) => {
         e.preventDefault()
         
-        await createUser(username,password).then(()=>{
+        const result = await createUser(username,password)
+        if(result){
             setTimeout(() => {
                 navigate('/',{replace:true})
             }, 500);
-        })
+        }
     }
     return (
         <>

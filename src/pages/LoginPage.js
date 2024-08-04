@@ -4,15 +4,16 @@ import { useNavigate } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 function RegisterPage() {
     const navigate = useNavigate()
-    const [username, setUsername] = useState('ariftunaunal@gmail.com')
-    const [password, setPassword] = useState('123321')
-    const {user} = useSelector(state => state.user)
+    const [username, setUsername] = useState('')
+    const [password, setPassword] = useState('')
+    const { user } = useSelector(state => state.user)
     if (user) { navigate("/", { replace: true }) }
     const submitHandle = async (e) => {
         e.preventDefault()
-        await login(username, password).then(()=>{
+        const result = await login(username, password)
+        if (result) {
             navigate("/", { replace: true })
-        })
+        }
     }
     return (
         <>
